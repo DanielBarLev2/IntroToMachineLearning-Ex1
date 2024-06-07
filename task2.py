@@ -33,7 +33,7 @@ def train_and_predict(x_train: np.ndarray, y_train: np.ndarray, query: np.ndarra
     inner_product = np.matmul(x_train, query.T)
     inner_product = inner_product[:, np.newaxis]
 
-    distances = np.sqrt(x_train_norms + query_norms.T - 2 * inner_product)
+    distances = np.sqrt(x_train_norms + query_norms - 2 * inner_product)
     k_nearest_neighbors = np.argsort(distances, axis=0)
 
     y_predictions = np.zeros(k)
@@ -69,5 +69,13 @@ def check_accuracy(x_train: np.ndarray, y_train: np.ndarray, x_test: np.ndarray,
         else:
             accuracy_list.append(0)
 
-    accuracy = sum(accuracy_list) / len(accuracy_list)
+    accuracy = (sum(accuracy_list) / len(accuracy_list)) * 100
     return accuracy
+
+
+if __name__ == '__main__':
+    n = 1000
+    k = 10
+
+    acc = check_accuracy(x_train=train[:n], y_train=train_labels[:n], x_test=test, y_test=test_labels, k=k)
+    print(f'the accuracy is: {acc}% on k={k}, with n={n}')
