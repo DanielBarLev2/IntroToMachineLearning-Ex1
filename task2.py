@@ -74,8 +74,48 @@ def check_accuracy(x_train: np.ndarray, y_train: np.ndarray, x_test: np.ndarray,
 
 
 if __name__ == '__main__':
-    n = 1000
-    k = 10
 
-    acc = check_accuracy(x_train=train[:n], y_train=train_labels[:n], x_test=test, y_test=test_labels, k=k)
-    print(f'the accuracy is: {acc}% on k={k}, with n={n}')
+    accuracies = []
+
+    test_k = False
+    test_n = True
+
+    if test_k:
+        n = 1000
+        k_values = range(1, 101)
+        for i, k in enumerate(k_values):
+            acc = check_accuracy(x_train=train[:n], y_train=train_labels[:n], x_test=test, y_test=test_labels, k=k)
+            accuracies.append(acc)
+            print(f' For iter {i} | the accuracy is: {acc}% on k={k}, with n={n}')
+
+        best_k = k_values[np.argmax(accuracies)]
+        best_accuracy = max(accuracies)
+        print(f"Best k: {best_k} with accuracy: {best_accuracy}")
+
+        plt.figure(figsize=(10, 6))
+        plt.plot(k_values, accuracies, marker='o')
+        plt.xlabel('k')
+        plt.ylabel('Accuracy')
+        plt.title('k-NN Accuracy as a Function of k')
+        plt.grid(True)
+        plt.show()
+
+    if test_n:
+        n_values = range(5000, 5100)
+        k = 1
+        for i, n in enumerate(n_values):
+            acc = check_accuracy(x_train=train[:n], y_train=train_labels[:n], x_test=test, y_test=test_labels, k=k)
+            accuracies.append(acc)
+            print(f' For iter {i} | the accuracy is: {acc}% on k={k}, with n={n}')
+
+        best_n = n_values[np.argmax(accuracies)]
+        best_accuracy = max(accuracies)
+        print(f"Best n: {best_n} with accuracy: {best_accuracy}")
+
+        plt.figure(figsize=(10, 6))
+        plt.plot(n_values, accuracies, marker='o')
+        plt.xlabel('Number of training samples (n)')
+        plt.ylabel('Accuracy')
+        plt.title('k-NN Accuracy as a Function of Training Set Size (k=1)')
+        plt.grid(True)
+        plt.show()
